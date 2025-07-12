@@ -595,12 +595,12 @@ async def start(client, message):
     f"<b>{title}</b>"
 )
             # Create a default formatted caption
-
 default_caption = (
     "<b>[ @MOVIECLUB9999 ]</b>"
     "<b>[ @MC_MOVIES_HD ]</b>"
     f"<b>{formate_file_name(files.file_name)}</b>"
 )
+
 # Use custom caption if provided, else fall back to default_caption
 if CUSTOM_FILE_CAPTION:
     try:
@@ -614,7 +614,7 @@ if CUSTOM_FILE_CAPTION:
         f_caption = default_caption
 else:
     f_caption = default_caption
-
+    
             await msg.edit_caption(
                 caption=f_caption,
                 reply_markup=InlineKeyboardMarkup(button)
