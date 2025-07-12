@@ -610,6 +610,10 @@ if CUSTOM_FILE_CAPTION:
             file_caption=default_caption
         )
     except Exception as e:
+        logger.warning(e)
+        f_caption = default_caption
+
+    except Exception as e:
         logger.exception(e)
         f_caption = default_caption
 else:
