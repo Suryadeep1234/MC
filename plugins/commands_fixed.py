@@ -594,8 +594,7 @@ async def start(client, message):
     "<b>[ @MC_MOVIES_HD ]</b>\n\n"
     f"<b>{title}</b>"
 )
-            # Create a default formatted caption
-# Step 1: Define this first
+            # Step 1: Define this first
 default_caption = (
     "<b>[ @MOVIECLUB9999 ]</b>"
     "<b>[ @MC_MOVIES_HD ]</b>"
@@ -603,19 +602,18 @@ default_caption = (
 )
 
 # Step 2: Now safely try to use CUSTOM_FILE_CAPTION
-if CUSTOM_FILE_CAPTION:
-    try:
+try:
+    if CUSTOM_FILE_CAPTION:
         f_caption = CUSTOM_FILE_CAPTION.format(
             file_name=title,
             file_size=size,
             file_caption=default_caption
         )
-    except Exception as e:
-        # fallback to default caption if formatting fails
+    else:
         f_caption = default_caption
-else:
-    f_caption = default_caption  # If CUSTOM_FILE_CAPTION not set
-    
+except Exception as e:
+    # fallback to default caption if formatting fails
+    f_caption = default_caption
             await msg.edit_caption(
                 caption=f_caption,
                 reply_markup=InlineKeyboardMarkup(button)
