@@ -594,9 +594,27 @@ async def start(client, message):
     "<b>[ @MC_MOVIES_HD ]</b>\n\n"
     f"<b>{title}</b>"
 )
-            if CUSTOM_FILE_CAPTION:
-                try:
-                    f_caption=CUSTOM_FILE_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='')
+            # Create a default formatted caption
+default_caption = (
+    "<b>[ @MOVIECLUB9999 ]</b>\n"
+    "<b>[ @MC_MOVIES_HD ]</b>\n\n"
+    f"<b>{formate_file_name(files.file_name)}</b>"
+)
+
+# Use custom caption if provided, else fall back to default_caption
+if CUSTOM_FILE_CAPTION:
+    try:
+        f_caption = CUSTOM_FILE_CAPTION.format(
+            file_name=title,
+            file_size=size,
+            file_caption=default_caption
+        )
+    except Exception as e:
+        logger.exception(e)
+        f_caption = default_caption
+else:
+    f_caption = default_caption
+
                 except:
                     return
             await msg.edit_caption(
