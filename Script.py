@@ -197,9 +197,9 @@ Nᴀᴍᴇ - {}"""
 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 <b>: {}</b>"""
 
     caption = (
-    f"[@MOVIECLUB9999]\n"
-    f"[@MC_MOVIES_HD]\n"
-    f"{file.file_name} ({get_size(file.file_size)})"
+    "[@MOVIECLUB9999]\n"
+    "[@MC_MOVIES_HD]\n"
+    "{filename} ({filesize})"
 )
     IMDB_TEMPLATE_TXT = """
 <b>Query: {qurey}
