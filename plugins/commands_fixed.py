@@ -597,11 +597,8 @@ async def start(client, message):
             # Create a default formatted caption
 
 default_caption = (
-    "<b>[ @MOVIECLUB9999 ]</b>
-"
-    "<b>[ @MC_MOVIES_HD ]</b>
-
-"
+    "<b>[ @MOVIECLUB9999 ]</b>"
+    "<b>[ @MC_MOVIES_HD ]</b>"
     f"<b>{formate_file_name(files.file_name)}</b>"
 )
 # Use custom caption if provided, else fall back to default_caption
