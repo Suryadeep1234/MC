@@ -589,7 +589,11 @@ async def start(client, message):
             file = getattr(msg, filetype.value)
             title = formate_file_name(file.file_name)
             size=get_size(file.file_size)
-            f_caption = f"<code>{title}</code>"
+            f_caption = (
+    "<b>[ @MOVIECLUB9999 ]</b>\n"
+    "<b>[ @MC_MOVIES_HD ]</b>\n\n"
+    f"<b>{title}</b>"
+)
             if CUSTOM_FILE_CAPTION:
                 try:
                     f_caption=CUSTOM_FILE_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='')
