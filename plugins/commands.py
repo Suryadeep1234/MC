@@ -600,7 +600,6 @@ default_caption = (
     "<b>[ @MC_MOVIES_HD ]</b>\n\n"
     f"<b>{formate_file_name(files.file_name)}</b>"
 )
-
 # Use custom caption if provided, else fall back to default_caption
 if CUSTOM_FILE_CAPTION:
     try:
@@ -610,15 +609,10 @@ if CUSTOM_FILE_CAPTION:
             file_caption=default_caption
         )
     except Exception as e:
-        logger.warning(e)
-        f_caption = default_caption
-
-    except Exception as e:
-        logger.exception(e)
+        logger.exception("Failed to apply CUSTOM_FILE_CAPTION", exc_info=True)
         f_caption = default_caption
 else:
     f_caption = default_caption
-
                 except:
                     return
             await msg.edit_caption(
