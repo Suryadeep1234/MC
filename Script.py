@@ -196,6 +196,10 @@ Nᴀᴍᴇ - {}"""
 
 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 <b>: {}</b>"""
 
+    CAPTION = """<b>[ @MOVIECLUB9999 ]</b>
+<b>[ @MC_MOVIES_HD ]</b>
+"""
+    
     CUSTOM_FILE_CAPTION = (
     "<b>[ @MOVIECLUB9999 ]</b>\n"
     "<b>[ @MC_MOVIES_HD ]</b>\n"
