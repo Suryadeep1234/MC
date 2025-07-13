@@ -586,15 +586,18 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(button)
             )
             filetype = msg.media
-            file = getattr(msg, filetype.value)
-            title = formate_file_name(file.file_name)
-            size=get_size(file.file_size)
-            default_caption = (
+file = getattr(msg, filetype.value)
+title = formate_file_name(file.file_name)
+size = get_size(file.file_size)
+
+# Use correct variable: `file`, not `files`
+default_caption = (
     "<b>[ @MOVIECLUB9999 ]</b>\n"
     "<b>[ @MC_MOVIES_HD ]</b>\n"
-    f"<b>{formate_file_name(files.file_name)}</b>"
+    f"<b>{title}</b>"
 )
 
+# Try using the custom caption template safely
 try:
     if CUSTOM_FILE_CAPTION:
         f_caption = CUSTOM_FILE_CAPTION.format(
@@ -604,23 +607,20 @@ try:
         )
     else:
         f_caption = default_caption
-except KeyError as e:
-    print(f"[ERROR] CUSTOM_FILE_CAPTION placeholder missing: {e}")
-    f_caption = default_caption
-    else:
-        f_caption = default_caption
+
 except KeyError as e:
     print(f"[ERROR] Missing placeholder in CUSTOM_FILE_CAPTION: {e}")
     f_caption = default_caption
-    else:
-        f_caption = default_caption
+
 except Exception as e:
-    # fallback to default caption if formatting fails
+    print(f"[ERROR] Failed to format caption: {e}")
     f_caption = default_caption
-            await msg.edit_caption(
-                caption=f_caption,
-                reply_markup=InlineKeyboardMarkup(button)
-            )
+
+# Finally, edit the caption
+await msg.edit_caption(
+    caption=f_caption,
+    reply_markup=InlineKeyboardMarkup(button)
+)
             btn = [[
                 InlineKeyboardButton("Get File Again", callback_data=f'delfile#{file_id}')
             ]]
