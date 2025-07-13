@@ -579,87 +579,96 @@ async def start(client, message):
                 ],[
                     #InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="http://t.me/zishananis_official")
                 ]]
-            msg = await client.send_cached_media(
-                chat_id=message.from_user.id,
-                file_id=file_id,
-                protect_content=True if pre == 'filep' else False,
-                reply_markup=InlineKeyboardMarkup(button)
-            )
-            filetype = msg.media
-file = getattr(msg, filetype.value)
-title = formate_file_name(file.file_name)
-size = get_size(file.file_size)
+            try:
+    msg = await client.send_cached_media(
+        chat_id=message.from_user.id,
+        file_id=file_id,
+        protect_content=True if pre == 'filep' else False,
+        reply_markup=InlineKeyboardMarkup(button)
+    )
 
-# Use correct variable: `file`, not `files`
-default_caption = (
-    "<b>[ @MOVIECLUB9999 ]</b>\n"
-    "<b>[ @MC_MOVIES_HD ]</b>\n"
-    f"<b>{title}</b>"
-)
+    filetype = msg.media
+    file = getattr(msg, filetype.value)
+    title = formate_file_name(file.file_name)  # Removed @sparrowbyzishan_bot
+    size = get_size(file.file_size)
 
-# Try using the custom caption template safely
-try:
-    if CUSTOM_FILE_CAPTION:
-        f_caption = CUSTOM_FILE_CAPTION.format(
-            file_name=title,
-            file_size=size,
-            file_caption=default_caption
-        )
-    else:
-        f_caption = default_caption
+    # Default caption (fallback)
+    f_caption = f"<b>{title}</b>"
 
-except KeyError as e:
-    print(f"[ERROR] Missing placeholder in CUSTOM_FILE_CAPTION: {e}")
-    f_caption = default_caption
-
-except Exception as e:
-    print(f"[ERROR] Failed to format caption: {e}")
-    f_caption = default_caption
-
-# Finally, edit the caption
-await msg.edit_caption(
-    caption=f_caption,
-    reply_markup=InlineKeyboardMarkup(button)
-)
-            btn = [[
-                InlineKeyboardButton("Get File Again", callback_data=f'delfile#{file_id}')
-            ]]
-            k = await msg.reply("<b><u>❗️❗️❗️IMPORTANT❗️️❗️❗️</u></b>\n\nThis Movie File/Video will be deleted in <b><u>10 mins</u> 🫥 <i></b>(Due to Copyright Issues)</i>.\n\n<b><i>Please forward this File/Video to your Saved Messages and Start Download there</i></b>",quote=True)
-            await asyncio.sleep(600)
-            await msg.delete()
-            await k.edit_text("<b>Your File/Video is successfully deleted!!!\n\nClick below button to get your deleted file 👇</b>",reply_markup=InlineKeyboardMarkup(btn))
-            return
-        except:
-            pass
-        return await message.reply('No such file exist.')
-    files = files_[0]
-    title = formate_file_name(files.file_name)
-    size=get_size(files.file_size)
-    f_caption=files.caption
+    # Use custom caption if provided
     if CUSTOM_FILE_CAPTION:
         try:
-            f_caption=CUSTOM_FILE_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)
+            f_caption = CUSTOM_FILE_CAPTION.format(
+                file_name=title or '',
+                file_size=size or '',
+                file_caption=''
+            )
         except Exception as e:
             logger.exception(e)
-            f_caption=f_caption
-    if f_caption is None:
-        f_caption = (
-    "<b>[ @MOVIECLUB9999 ]</b>\n"
-    "<b>[ @MC_MOVIES_HD ]</b>\n\n"
-    f"<b>{formate_file_name(files.file_name)}</b>"
-)
-    if not await db.has_premium_access(message.from_user.id):
-        if not await check_verification(client, message.from_user.id) and VERIFY == True:
-            btn = [[
-                InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{temp.U_NAME}?start="))
-            ],[
-                InlineKeyboardButton("How To Open Link & Verify", url=VERIFY_TUTORIAL)
-            ]]
-            await message.reply_text(
-                text="<b>You are not verified !\nKindly verify to continue !</b>",
-                protect_content=True,
-                reply_markup=InlineKeyboardMarkup(btn)
-            )
+
+    # Edit media caption
+    await msg.edit_caption(
+        caption=f_caption,
+        reply_markup=InlineKeyboardMarkup(button)
+    )
+
+    # Warning message & deletion setup
+    btn = [[
+        InlineKeyboardButton("Get File Again", callback_data=f'delfile#{file_id}')
+    ]]
+    k = await msg.reply(
+        "<b><u>❗️❗️❗️IMPORTANT❗️️❗️❗️</u></b>\n\n"
+        "This Movie File/Video will be deleted in <b><u>10 mins</u> 🫥</b> "
+        "<i>(Due to Copyright Issues)</i>.\n\n"
+        "<b><i>Please forward this File/Video to your Saved Messages and Start Download there</i></b>",
+        quote=True
+    )
+
+    await asyncio.sleep(600)
+    await msg.delete()
+
+    await k.edit_text(
+        "<b>Your File/Video is successfully deleted!!!\n\nClick below button to get your deleted file 👇</b>",
+        reply_markup=InlineKeyboardMarkup(btn)
+    )
+    return
+
+except Exception as e:
+    logger.exception(e)
+
+# Fallback block for direct DB access
+files = files_[0]
+title = formate_file_name(files.file_name)
+size = get_size(files.file_size)
+f_caption = files.caption
+
+if CUSTOM_FILE_CAPTION:
+    try:
+        f_caption = CUSTOM_FILE_CAPTION.format(
+            file_name=title or '',
+            file_size=size or '',
+            file_caption=f_caption or ''
+        )
+    except Exception as e:
+        logger.exception(e)
+
+if f_caption is None:
+    f_caption = f"<b>{title}</b>"
+
+# Verification for free users
+if not await db.has_premium_access(message.from_user.id):
+    if VERIFY and not await check_verification(client, message.from_user.id):
+        btn = [[
+            InlineKeyboardButton("Verify", url=await get_token(
+                client, message.from_user.id, f"https://telegram.me/{temp.U_NAME}?start="))
+        ], [
+            InlineKeyboardButton("How To Open Link & Verify", url=VERIFY_TUTORIAL)
+        ]]
+        await message.reply_text(
+            text="<b>You are not verified!\nKindly verify to continue!</b>",
+            protect_content=True,
+            reply_markup=InlineKeyboardMarkup(btn)
+    )
             return
     if STREAM_MODE == True:
         button = [[
