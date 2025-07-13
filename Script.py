@@ -196,12 +196,11 @@ Nᴀᴍᴇ - {}"""
 
 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 <b>: {}</b>"""
 
-    CAPTION = (
+    CUSTOM_FILE_CAPTION = (
     "<b>[ @MOVIECLUB9999 ]</b>\n"
     "<b>[ @MC_MOVIES_HD ]</b>\n"
-    "<b>{filename} ({filesize})</b>"
-)
-    
+    "<b>{file_name}</b>"
+    )
     IMDB_TEMPLATE_TXT = """
 <b>Query: {qurey}
 
