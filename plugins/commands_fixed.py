@@ -589,19 +589,12 @@ async def start(client, message):
             file = getattr(msg, filetype.value)
             title = formate_file_name(file.file_name)
             size=get_size(file.file_size)
-            f_caption = (
+            default_caption = (
     "<b>[ @MOVIECLUB9999 ]</b>\n"
-    "<b>[ @MC_MOVIES_HD ]</b>\n\n"
-    f"<b>{title}</b>"
-)
-            # Step 1: Define this first
-default_caption = (
-    "<b>[ @MOVIECLUB9999 ]</b>"
-    "<b>[ @MC_MOVIES_HD ]</b>"
+    "<b>[ @MC_MOVIES_HD ]</b>\n"
     f"<b>{formate_file_name(files.file_name)}</b>"
 )
 
-# Step 2: Now safely try to use CUSTOM_FILE_CAPTION
 try:
     if CUSTOM_FILE_CAPTION:
         f_caption = CUSTOM_FILE_CAPTION.format(
@@ -609,6 +602,11 @@ try:
             file_size=size,
             file_caption=default_caption
         )
+    else:
+        f_caption = default_caption
+except KeyError as e:
+    print(f"[ERROR] Missing placeholder in CUSTOM_FILE_CAPTION: {e}")
+    f_caption = default_caption
     else:
         f_caption = default_caption
 except Exception as e:
