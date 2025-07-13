@@ -605,6 +605,11 @@ try:
     else:
         f_caption = default_caption
 except KeyError as e:
+    print(f"[ERROR] CUSTOM_FILE_CAPTION placeholder missing: {e}")
+    f_caption = default_caption
+    else:
+        f_caption = default_caption
+except KeyError as e:
     print(f"[ERROR] Missing placeholder in CUSTOM_FILE_CAPTION: {e}")
     f_caption = default_caption
     else:
